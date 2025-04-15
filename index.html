@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>محوّل أورا النجمية</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #1c1c2b;
+      color: #eee;
+      text-align: center;
+      padding: 2em;
+    }
+    textarea {
+      width: 90%;
+      height: 120px;
+      padding: 1em;
+      font-size: 1.1em;
+      background: #2b2b3a;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      margin-top: 1em;
+    }
+    button {
+      margin: 1em 0.5em;
+      padding: 0.8em 1.5em;
+      font-size: 1em;
+      background-color: #5b3b9a;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    button:hover {
+      background-color: #7c57c3;
+    }
+    .output {
+      margin-top: 1em;
+      background: #202030;
+      padding: 1.5em;
+      border-radius: 10px;
+      font-size: 1.3em;
+      word-break: break-word;
+      position: relative;
+    }
+    .copied-message {
+      position: absolute;
+      top: -25px;
+      right: 10px;
+      background: #3bffb4;
+      color: #1c1c1c;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 0.9em;
+      animation: fadeOut 2s forwards;
+    }
+    @keyframes fadeOut {
+      0% { opacity: 1; }
+      100% { opacity: 0; transform: translateY(-10px); }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>محوّل النصوص إلى أورا النجمية</h1>
+  <p>اكتب نصك أدناه، وشاهد التحويل السحري!</p>
+
+  <textarea id="inputText" placeholder="أدخل النص هنا..."></textarea><br>
+  <button onclick="convertToAura()">تحويل</button>
+  <button onclick="copyResult()">⧉ نسخ النتيجة</button>
+
+  <div class="output" id="outputArea"></div>
+
+  <script>
+    const basicLetters = {
+      a: "ᘁ", b: "ᘂ", c: "ᘃ", d: "ᘄ", e: "ᘅ", f: "ᘆ", g: "ᘇ", h: "ᘕ",
+      i: "ᘉ", j: "ᘊ", k: "ᘋ", l: "ᘍ", m: "ᘌ", n: "ᘎ", o: "ᘏ", p: "ᘐ",
+      q: "ᘑ", r: "ᘒ", s: "ᘓ", t: "ᘔ", u: "ᘗ", v: "ᘖ", w: "ᘗ", x: "ᘘ",
+      y: "ᘙ", z: "ᘚ"
+    };
+
+    const compoundLetters = {
+      th: "ᘜ", sh: "ᘝ", ch: "ᘞ", ph: "ᘟ", ae: "ᘠ", oe: "ᘡ", qu: "ᘢ",
+      kh: "ᘣ", gh: "ᘤ", tz: "ᘥ", dr: "ᘦ", vr: "ᘧ", ln: "ᘨ", yr: "ᘩ", el: "ᘪ"
+    };
+
+    const punctuation = {
+      ".": "⸰", ",": "᛫", "...": "⸺", "—": "⎯", "'": "ꞌ", "\"": "❝❞",
+      "!": "❈", "?": "⸮", "(": "〔", ")": "〕", ":": "༶", ";": "⁖",
+      "/": "∕", "\\": "⧵", "*": "❂", "#": "⚷", "@": "☉", "&": "⚯",
+      "%": "℧", "+": "✶", "=": "⩶", "~": "≋"
+    };
+
+    const numbers = {
+      "0": "ᙀ", "1": "ᙁ", "2": "ᙂ", "3": "ᙃ", "4": "ᙄ",
+      "5": "ᙅ", "6": "ᙋ", "7": "ᙍ", "8": "ᙈ", "9": "ᙉ"
+    };
+
+    function convertToAura() {
+      let text = document.getElementById("inputText").value.toLowerCase();
+      let result = "";
+      for (let i = 0; i < text.length;) {
+        const twoChar = text.slice(i, i + 2);
+        if (compoundLetters[twoChar]) {
+          result += compoundLetters[twoChar];
+          i += 2;
+        } else if (basicLetters[text[i]]) {
+          result += basicLetters[text[i]];
+          i++;
+        } else if (numbers[text[i]]) {
+          result += numbers[text[i]];
+          i++;
+        } else if (punctuation[text[i]]) {
+          result += punctuation[text[i]];
+          i++;
+        } else {
+          result += text[i];
+          i++;
+        }
+      }
+      document.getElementById("outputArea").innerText = result;
+    }
+
+    function copyResult() {
+      const outputDiv = document.getElementById("outputArea");
+      const text = outputDiv.innerText;
+      if (text) {
+        navigator.clipboard.writeText(text).then(() => {
+          showCopiedMessage(outputDiv);
+        });
+      }
+    }
+
+    function showCopiedMessage(container) {
+      const msg = document.createElement("div");
+      msg.className = "copied-message";
+      msg.innerText = "✨ تم حفظ السحر!";
+      container.appendChild(msg);
+      setTimeout(() => {
+        container.removeChild(msg);
+      }, 2000);
+    }
+  </script>
+
+</body>
+</html>
